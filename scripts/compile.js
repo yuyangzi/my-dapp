@@ -27,13 +27,24 @@ readFile(contractPath, 'utf-8')
             }
         };
         const output = JSON.parse(solc.compile(JSON.stringify(input)));
-        return output.contracts;
+        if (output.contracts) {
+            return output.contracts;
+        } else {
+            throw output.errors;
+        }
     })
     .then(contracts => {
         Object.keys(contracts).forEach(contractName => {
             const fileName = contractName.split('.')[0];
-            writeFile(path.resolve(__dirname, `../src/compiled/${fileName}.json`), JSON.stringify(contracts[contractName]))
-                .then(console.log)
+            const compiledPath = path.resolve(__dirname, `../src/compiled/${fileName}.json`);
+            writeFile(compiledPath, JSON.stringify(contracts[contractName]))
+                .then(() => console.log(`${fileName}.json: 写入成功`))
+                .catch(error => console.log(`${fileName}: 写入失败`, error))
         })
+    }, error => {
+        console.log(`--------------error Start--------------`);
+        error.forEach(errorObj => console.log(`${errorObj.type}: ${errorObj.formattedMessage}`));
+        console.log(`--------------error End--------------`);
     });
+
 
