@@ -93,6 +93,18 @@ contract Course {
         count = 0;
     }
 
+    // 添加视频
+    function addVideo(string memory _videoHash) public {
+
+        // 添加人必须是作者
+        require(msg.sender == owner);
+
+        // 课程必须已经上线
+        require(isOnline == true);
+
+        videoHash = _videoHash;
+    }
+
     // 众筹或购买
     function buy() public payable {
         // 1. 用户没有购买过
@@ -160,6 +172,4 @@ contract Course {
         role
         );
     }
-
-
 }
