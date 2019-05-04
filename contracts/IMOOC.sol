@@ -140,7 +140,7 @@ contract Course {
             // 课程创建者
             role = 0;
 
-        } else if (users[msg.sender] != 0) {
+        } else if (users[msg.sender] > 0) {
             // 已购买
             role = 1;
         } else {
